@@ -1,35 +1,82 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Container, Typography, Box, Tabs, Tab } from '@mui/material';
+import { FilterEnum, type Filter } from '@commonTypes/commonTypes';
+import TodoList from '@components/TodoList/TodoList';
+import TodoInput from '@components/TodoInput/TodoInput';
+import TodoListActions from '@components/TodoListActions/TodoListActions';
+import { TodoProvider, useTodoDispatch, useTodoState } from '@context/context';
+import { useCallback, useMemo } from 'react';
 
-function App() {
-  const [count, setCount] = useState(0)
+function AppContent() {
+  const { todos, filter } = useTodoState();
+  const dispatch = useTodoDispatch();
+
+  const handleAddTodo = useCallback((text: string) => {
+    dispatch({ type: 'ADD_TODO', text });
+  }, [dispatch]);
+
+  const handleToggle = useCallback((id: string) => {
+    dispatch({ type: 'TOGGLE_TODO', id });
+  }, [dispatch]);
+
+  const handleDelete = useCallback((id: string) => {
+    dispatch({ type: 'DELETE_TODO', id });
+  }, [dispatch]);
+
+  const handleClearCompleted = useCallback(() => {
+    dispatch({ type: 'CLEAR_COMPLETED' });
+  }, [dispatch]);
+
+  const handleFilterChange = (filter: Filter) => {
+    dispatch({ type: 'SET_FILTER', filter });
+  };
+
+  const filteredTodos = useMemo(() => todos.filter((todo) => {
+    if (filter === FilterEnum.Active) return !todo.completed;
+    if (filter === FilterEnum.Completed) return todo.completed;
+    return true;
+  }), [todos, filter]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h4" component="h1" align="center" gutterBottom>
+        Список задач
+      </Typography>
+
+      <TodoInput onAddTodo={handleAddTodo} />
+
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs
+          value={filter}
+          onChange={(_, newValue) => handleFilterChange(newValue as Filter)}
+          centered
+        >
+          <Tab label="Все" value={FilterEnum.All} />
+          <Tab label="Активные" value={FilterEnum.Active} />
+          <Tab label="Выполненные" value={FilterEnum.Completed} />
+        </Tabs>
+      </Box>
+
+      <TodoListActions
+        todosLength={todos.length}
+        remainingCount={todos.filter((todo) => !todo.completed).length}
+        handleClearCompleted={handleClearCompleted}
+      />
+
+      <TodoList
+        todos={filteredTodos}
+        onToggle={handleToggle}
+        onDelete={handleDelete}
+      />
+    </Container>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <TodoProvider>
+      <AppContent />
+    </TodoProvider>
+  );
+}
+
+export default App;
