@@ -19,13 +19,19 @@ const TodoInput: FC<TodoInputProps> = ({ onAddTodo }) => {
   return (
     <Box display="flex" gap={1} mb={2}>
       <TextField
+        data-testid="todo-input-testid"
         label="Новая задача"
         variant="outlined"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         fullWidth
       />
-      <Button variant="contained" color="primary" onClick={handleAddTodo}>
+      <Button
+        data-testid="todo-input-button-testid"
+        variant="contained"
+        color="primary"
+        onClick={handleAddTodo}
+      >
         Добавить
       </Button>
     </Box>

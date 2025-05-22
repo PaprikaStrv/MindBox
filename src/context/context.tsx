@@ -6,28 +6,40 @@ import {
   type Dispatch,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { FilterEnum, type Filter, type TodoItemType } from '@commonTypes/commonTypes';
+import {
+  FilterEnum,
+  type Filter,
+  type TodoItemType,
+} from '@commonTypes/commonTypes';
 
 type State = {
   todos: TodoItemType[];
   filter: Filter;
 };
 
-type Action =
-  | { type: 'ADD_TODO'; text: string }
-  | { type: 'TOGGLE_TODO'; id: string }
-  | { type: 'DELETE_TODO'; id: string }
-  | { type: 'SET_FILTER'; filter: Filter }
-  | { type: 'CLEAR_COMPLETED' };
+export enum ActionType {
+  ADD_TODO = 'ADD_TODO',
+  TOGGLE_TODO = 'TOGGLE_TODO',
+  DELETE_TODO = 'DELETE_TODO',
+  SET_FILTER = 'SET_FILTER',
+  CLEAR_COMPLETED = 'CLEAR_COMPLETED',
+}
 
-const initialState: State = {
+type Action =
+  | { type: ActionType.ADD_TODO; text: string }
+  | { type: ActionType.TOGGLE_TODO; id: string }
+  | { type: ActionType.DELETE_TODO; id: string }
+  | { type: ActionType.SET_FILTER; filter: Filter }
+  | { type: ActionType.CLEAR_COMPLETED };
+
+export const initialState: State = {
   todos: [],
   filter: FilterEnum.All,
 };
 
-function reducer(state: State, action: Action): State {
+export function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'ADD_TODO':
+    case ActionType.ADD_TODO:
       return {
         ...state,
         todos: [
@@ -35,24 +47,24 @@ function reducer(state: State, action: Action): State {
           { id: uuidv4(), text: action.text, completed: false },
         ],
       };
-    case 'TOGGLE_TODO':
+    case ActionType.TOGGLE_TODO:
       return {
         ...state,
         todos: state.todos.map((todo) =>
           todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
         ),
       };
-    case 'DELETE_TODO':
+    case ActionType.DELETE_TODO:
       return {
         ...state,
         todos: state.todos.filter((todo) => todo.id !== action.id),
       };
-    case 'SET_FILTER':
+    case ActionType.SET_FILTER:
       return {
         ...state,
         filter: action.filter,
       };
-    case 'CLEAR_COMPLETED':
+    case ActionType.CLEAR_COMPLETED:
       return {
         ...state,
         todos: state.todos.filter((todo) => !todo.completed),

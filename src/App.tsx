@@ -3,7 +3,7 @@ import { FilterEnum, type Filter } from '@commonTypes/commonTypes';
 import TodoList from '@components/TodoList/TodoList';
 import TodoInput from '@components/TodoInput/TodoInput';
 import TodoListActions from '@components/TodoListActions/TodoListActions';
-import { TodoProvider, useTodoDispatch, useTodoState } from '@context/context';
+import { ActionType, TodoProvider, useTodoDispatch, useTodoState } from '@context/context';
 import { useCallback, useMemo } from 'react';
 
 function AppContent() {
@@ -11,23 +11,23 @@ function AppContent() {
   const dispatch = useTodoDispatch();
 
   const handleAddTodo = useCallback((text: string) => {
-    dispatch({ type: 'ADD_TODO', text });
+    dispatch({ type: ActionType.ADD_TODO, text });
   }, [dispatch]);
 
   const handleToggle = useCallback((id: string) => {
-    dispatch({ type: 'TOGGLE_TODO', id });
+    dispatch({ type: ActionType.TOGGLE_TODO, id });
   }, [dispatch]);
 
   const handleDelete = useCallback((id: string) => {
-    dispatch({ type: 'DELETE_TODO', id });
+    dispatch({ type: ActionType.DELETE_TODO, id });
   }, [dispatch]);
 
   const handleClearCompleted = useCallback(() => {
-    dispatch({ type: 'CLEAR_COMPLETED' });
+    dispatch({ type: ActionType.CLEAR_COMPLETED });
   }, [dispatch]);
 
   const handleFilterChange = (filter: Filter) => {
-    dispatch({ type: 'SET_FILTER', filter });
+    dispatch({ type: ActionType.SET_FILTER, filter });
   };
 
   const filteredTodos = useMemo(() => todos.filter((todo) => {

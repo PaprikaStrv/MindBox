@@ -1,7 +1,23 @@
 {
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2020",
+    "strict": true,
+    "paths": {
+      "@components/*": ["./src/components/*"],
+      "@commonTypes/*": ["./src/commonTypes/*"],
+      "@context/*": ["./src/context/*"]
+    },
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  
+  
 }

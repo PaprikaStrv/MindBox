@@ -21,11 +21,12 @@ const TodoListActions: React.FC<TodoListActionsProps> = ({
       </Typography>
     )}
 
-    <Button
-      variant="outlined"
-      color="secondary"
-      onClick={handleClearCompleted}
-      disabled={remainingCount === todosLength}
+      <Button
+        data-testid="todo-list-actions-clear-completed-button"
+        variant="outlined"
+        color="secondary"
+        onClick={handleClearCompleted}
+        disabled={remainingCount === todosLength}
     >
       Очистить выполненные
     </Button>

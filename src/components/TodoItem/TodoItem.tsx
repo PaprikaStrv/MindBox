@@ -13,17 +13,23 @@ const TodoItem: FC<TodoItemProps> = ({ todo, onToggle, onDelete }) => {
   return (
     <ListItem
       secondaryAction={
-        <IconButton edge="end" onClick={() => onDelete(todo.id)}>
+        <IconButton
+          data-testid="todo-item-delete-button-testid"
+          edge="end"
+          onClick={() => onDelete(todo.id)}
+        >
           <DeleteIcon />
         </IconButton>
       }
     >
       <Checkbox
+        data-testid="todo-item-checkbox-testid"
         checked={todo.completed}
         onChange={() => onToggle(todo.id)}
         color="primary"
       />
       <ListItemText
+        data-testid="todo-item-text-testid"
         primary={todo.text}
         sx={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
       />
